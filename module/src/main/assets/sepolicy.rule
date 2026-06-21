@@ -5,16 +5,24 @@ type cross_device_service { service_manager_type system_server_service app_api_s
 type virtual_keyboard { domain coredomain binderservicedomain }
 type virtual_keyboard_exec { file_type exec_type system_file_type }
 type virtual_keyboard_service service_manager_type
+
+# --- Process permissions ---
 allow virtual_keyboard virtual_keyboard process { fork sigchld signal getsched setsched getpgid setpgid setcap setrlimit getattr getrlimit }
 allow virtual_keyboard virtual_keyboard dir { search read open getattr }
 allow virtual_keyboard virtual_keyboard file { read write open getattr ioctl lock map }
 allow virtual_keyboard virtual_keyboard lnk_file { read getattr }
 allow virtual_keyboard virtual_keyboard unix_dgram_socket { create connect write read getattr setopt }
 allow virtual_keyboard virtual_keyboard binder { call transfer }
+
+# --- Property access ---
 allow virtual_keyboard system_prop file { read open getattr map }
 allow virtual_keyboard default_prop file { read open getattr map }
 allow virtual_keyboard servicemanager_prop file { read open getattr map }
+allow virtual_keyboard property_socket sock_file { read write getopt setopt }
+
+# --- Device access ---
 allow virtual_keyboard binder_device chr_file { open read write ioctl map }
+allow virtual_keyboard uhid_device chr_file { open read write ioctl lock append map }
 
 # --- init ---
 type_transition init virtual_keyboard_exec process virtual_keyboard
@@ -45,4 +53,7 @@ allow virtual_keyboard system_server binder { call transfer }
 allow virtual_keyboard system_server fd use
 allow virtual_keyboard permission_service service_manager find
 allow virtual_keyboard package_native_service service_manager find
-allow virtual_keyboard uhid_device chr_file { ioctl write lock append map open }
+
+# --- SukiSU Ultra compatibility ---
+allow virtual_keyboard kernel unix_stream_socket { read write }
+dontaudit virtual_keyboard kernel unix_stream_socket { read write }
