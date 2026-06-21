@@ -1,6 +1,8 @@
-id=LinkToWindows
-name=Link To Windows
-version=%%VERSION%%
-versionCode=%%VERSIONCODE%%
-author=YuKongA
-description=Sideloads LinkToWindows APKs and uses Zygisk to flip ltwEnabled()
+id=linktowindows
+name=LinkToWindows (SukiSU Fixed)
+version=1.0
+versionCode=1
+author=YuKongA + Fix
+description=Link to Windows integration with safe SukiSU Ultra patch
+requires=sukisu-ultra
+kpm=true
