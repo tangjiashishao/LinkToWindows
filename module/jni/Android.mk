@@ -1,9 +1,9 @@
 LOCAL_PATH := $(call my-dir)
 
 include $(CLEAR_VARS)
-LOCAL_MODULE     := module
-LOCAL_SRC_FILES  := module.cpp
-LOCAL_LDLIBS     := -llog
-LOCAL_CPPFLAGS   := -std=c++23 -fvisibility=hidden -fvisibility-inlines-hidden
-LOCAL_C_INCLUDES := $(LOCAL_PATH)/../build/generated/jni
+LOCAL_MODULE := linktowindows
+LOCAL_SRC_FILES := \
+    src/main/cpp/sepolicy_patch.c \
+    src/main/cpp/module_entry.c
+LOCAL_SHARED_LIBRARIES := libxposed
 include $(BUILD_SHARED_LIBRARY)
