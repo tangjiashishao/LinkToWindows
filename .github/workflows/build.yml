@@ -1,0 +1,55 @@
+name: Build and Release Module
+
+on:
+  push:
+    tags:
+      - 'v*'   # 每次打 tag，比如 v1.0，就会触发构建和发布
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up JDK
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y zip make
+
+      - name: Build module with KPM
+        run: |
+          chmod +x ./kpm
+          ./kpm build
+          mkdir -p output
+          cp *.zip output/
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: module-zip
+          path: output/*.zip
+
+  release:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: module-zip
+          path: output
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: output/*.zip
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
